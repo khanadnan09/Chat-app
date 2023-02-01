@@ -17,8 +17,7 @@ const SideBarHead = () => {
             db.collection("rooms").add({
                 name: roomName,
                 // image:image
-            })
-          
+            })         
         }
     }
 

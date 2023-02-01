@@ -23,7 +23,7 @@ const SideBarGroups = ({ id, name }) => {
                         lastMsg[0] ? new Date(lastMsg[0].timeStamp?.seconds * 1000).toLocaleTimeString() : "Loading..."
                     }</span> </span>
                     <span className="user_sm_msg d-flex justify-content-between">{
-                        lastMsg ? lastMsg[0].message : "Loading..."
+                        lastMsg.length ? lastMsg[0].message : "Loading..."
                     }
                     </span>
                 </div>
