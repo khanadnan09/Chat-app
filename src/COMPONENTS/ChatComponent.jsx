@@ -4,6 +4,7 @@ import firebase from "firebase/compat/app";
 import sound from '../IMAGES/sound.mp3';
 import { useSelector } from 'react-redux'
 import userImg from '../IMAGES/user.png';
+import { ref, uploadBytesResumable, getDownloadURL, getStorage } from "firebase/storage";
 
 const ChatComponent = ({ roomId }) => {
 
@@ -12,17 +13,62 @@ const ChatComponent = ({ roomId }) => {
   const [displayMsg, setDisplayMsg] = useState([])
   const messagesEndRef = useRef(null);
   const userData = useSelector((state) => state.user)
-
+  // State to store uploaded file
+  const [file, setFile] = useState([]);
+  // progress
+  const [percent, setPercent] = useState(0);
+  // fileUrl Send by user
+  const [fileUrl, setFileUrl] = useState("");
+  const storage = getStorage();
 
   const sendMessage = () => {
-    if (message === "") {
+    if (message === "" && file === "") {
       alert("you can not send empty meassage.")
     } else {
-      db.collection("rooms").doc(roomId).collection("messages").add({
-        userName: userData.userName,
-        message: message,
-        timeStamp: firebase.firestore.FieldValue.serverTimestamp()
-      })
+
+      // handling images
+      const storageRef = storage && file.name && ref(storage, `/files/${file.name}`);
+      // progress can be paused and resumed. It also exposes progress updates.
+      // Receives the storage reference and the file to upload.
+      if (file.name) {
+        const uploadTask = uploadBytesResumable(storageRef, file);
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            const percent = Math.round(
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            );
+
+            // update progress
+            setPercent(percent);
+          },
+          (err) => console.log(err),
+          () => {
+            // download url
+            getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+              setFileUrl(url);
+              db.collection("rooms").doc(roomId).collection("messages").add({
+                userName: userData.userName,
+                message: message,
+                timeStamp: firebase.firestore.FieldValue.serverTimestamp(),
+                file: url
+              })
+            });
+
+          }
+        );
+      }
+      setFile("")
+      setFileUrl("")
+
+      // sending data to dataBASE while file is not seclected
+      if (!file.name) {
+        db.collection("rooms").doc(roomId).collection("messages").add({
+          userName: userData.userName,
+          message: message,
+          timeStamp: firebase.firestore.FieldValue.serverTimestamp(),
+        })
+      }
       audioRef.current.play();
       setMessage("")
     }
@@ -36,7 +82,11 @@ const ChatComponent = ({ roomId }) => {
     messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
   }, [roomId])
 
-
+  //  handling file input
+  const handleChange = (event) => {
+    setFile(event.target.files[0])
+  }
+   
   return (
     <>
       {/* CHATconversion */}
@@ -55,7 +105,11 @@ const ChatComponent = ({ roomId }) => {
               return <div className={`col-12 UserChatCol ${userData.userName === msgData.userName && "user__sender"} `} key={msgData.timeStamp}>
                 <div className="UserChat">
                   <div className="name__user__Img"> <img src={userData.userName === msgData.userName ? userData.userPhoto : userImg} alt="user__Img" className='user__Img' /> {msgData.userName}</div>
-                  <div className="message__user">{msgData.message}<div className="timeStamp">{new Date(msgData.timeStamp?.seconds * 1000).toLocaleString()}</div>
+                  <div className="message__user">{msgData.message}
+                    {
+                      msgData.file ?  <img src={msgData.file} alt="IMG" className='sendImgUSER' />:""
+                    }
+                    <div className="timeStamp">{new Date(msgData.timeStamp?.seconds * 1000).toLocaleString()}</div>
                   </div>
                 </div>
               </div>
@@ -79,12 +133,13 @@ const ChatComponent = ({ roomId }) => {
       {/* Send messageg Box/Input */}
       <div className="col-12 top_left_header d-flex align-items-center" style={{ padding: "7.5px 16px", backgroundcolor: "#f0f2f5" }}>
         <div className="input_before_icons d-flex align-items-center">
-          <input type="file" id='sendImg' style={{ display: "none" }} />
-          <label htmlFor="sendImg"><ion-icon name="image" id="send-img"></ion-icon>
+          <input type="file" id='sendImg' onChange={handleChange} style={{ display: "none" }} />
+          <label htmlFor="sendImg" ><ion-icon name="image" id="send-img"></ion-icon>
           </label>
         </div>
         <input type="text" placeholder="Type a message" className="chat_box" value={message} onChange={e => setMessage(e.target.value)} />
         <ion-icon name="send-sharp" id="send-icon" onClick={sendMessage}></ion-icon>
+        <p>{percent} "% done"</p>
         <audio ref={audioRef} src={sound}></audio>
       </div>
     </>
