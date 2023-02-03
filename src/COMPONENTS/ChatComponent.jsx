@@ -5,6 +5,7 @@ import sound from '../IMAGES/sound.mp3';
 import { useSelector } from 'react-redux'
 import userImg from '../IMAGES/user.png';
 import { ref, uploadBytesResumable, getDownloadURL, getStorage } from "firebase/storage";
+import PreLoader from './PreLoader';
 
 const ChatComponent = ({ roomId }) => {
 
@@ -19,6 +20,8 @@ const ChatComponent = ({ roomId }) => {
   const [percent, setPercent] = useState(0);
   // fileUrl Send by user
   const [fileUrl, setFileUrl] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const storage = getStorage();
 
   const sendMessage = () => {
@@ -31,11 +34,13 @@ const ChatComponent = ({ roomId }) => {
       // progress can be paused and resumed. It also exposes progress updates.
       // Receives the storage reference and the file to upload.
       if (file.name) {
+       
         const uploadTask = uploadBytesResumable(storageRef, file);
+        setLoading(true);
         uploadTask.on(
           "state_changed",
           (snapshot) => {
-            const percent = Math.round(
+            Math.round(
               (snapshot.bytesTransferred / snapshot.totalBytes) * 100
             );
 
@@ -54,13 +59,14 @@ const ChatComponent = ({ roomId }) => {
                 file: url
               })
             });
-
+            setLoading(false);
           }
         );
+       
       }
       setFile("")
       setFileUrl("")
-
+console.log(loading);
       // sending data to dataBASE while file is not seclected
       if (!file.name) {
         db.collection("rooms").doc(roomId).collection("messages").add({
@@ -89,6 +95,9 @@ const ChatComponent = ({ roomId }) => {
    
   return (
     <>
+    {
+      loading ? <PreLoader/> : ""
+    }
       {/* CHATconversion */}
       <div className="col-12 Chat_conversion_area">
         <div className="row">
@@ -139,7 +148,6 @@ const ChatComponent = ({ roomId }) => {
         </div>
         <input type="text" placeholder="Type a message" className="chat_box" value={message} onChange={e => setMessage(e.target.value)} />
         <ion-icon name="send-sharp" id="send-icon" onClick={sendMessage}></ion-icon>
-        <p>{percent} "% done"</p>
         <audio ref={audioRef} src={sound}></audio>
       </div>
     </>

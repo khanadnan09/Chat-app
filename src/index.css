@@ -384,3 +384,11 @@
 .wraper button ion-icon {
   margin-left: 10px;
 }
+
+.spinner__col {
+  background-color: #e5e3e3f0;
+  height: calc(90vh - 61px) ;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
