@@ -28,7 +28,7 @@ const Sidebar = () => {
           <div className="col-12 p-0 SideBarGroups">
             {
               rooms.map((room) => {
-                return <SideBarGroups key={room.id} id={room.id} name={room.data.name} />
+                return <SideBarGroups key={room.id} id={room.id} name={room.data.name} image = {room.data.image}/>
               })
             }
           </div>

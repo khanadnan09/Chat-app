@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from "react-router-dom";
 import db from '../firebase';
 
-const SideBarGroups = ({ id, name }) => {
+const SideBarGroups = ({ id, name, image }) => {
 
     const [lastMsg, setLastMsg] = useState("")
 
@@ -12,11 +12,14 @@ const SideBarGroups = ({ id, name }) => {
         })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-console.log(lastMsg)
+
     return (
         <Link to={`/room/${id}`} style={{ textDecoration: "none" }}>
-            <div className="col-12 single_contact">
-                <img src="https://mywhatsappwebclone.netlify.app/IMAGES/ps1.jpg" alt="GroupImg" />
+            <div className="col-12 single_contact d-flex align-items-center">
+                {
+                    image ? <img src={image} alt="GruopImg" /> : <ion-icon name="person" id="groupIcon"></ion-icon>
+                }
+
 
                 <div className="wraper_user_text">
                     <span className="user_name">{name} <span className="time">{
