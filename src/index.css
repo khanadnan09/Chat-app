@@ -465,16 +465,35 @@
   text-align: center;
 }
 
+.errorMessage {
+  margin-top: 10px;
+  font-size: 11px;
+  color: red;
+  font-weight: 500;
+  text-decoration: underline;
+}
+
+video {
+  width: 100%;
+}
+
+.message__user .document span {
+  font-size: 12px;
+}
+
+.message__user .document ion-icon {
+  font-size: 30px;
+}
+
+.message__user .document a ion-icon {
+  font-size: 22px;
+  color: #313844;
+}
+
 /* responsive css */
 @media screen and (max-width: 1060px) {
   .user_sm_msg {
     width: 150px;
-  }
-}
-
-@media screen and (min-width: 992px) {
-  .user_wraper ion-icon {
-    display: none !important;
   }
 }
 
@@ -518,13 +537,16 @@
     margin-left: 10px !important;
     margin-right: 10px !important;
   }
+
   .name__user__Img {
     margin-left: 10px;
   }
+
   .user__sender .name__user__Img {
-  margin-right: 10px;
+    margin-right: 10px;
   }
 }
+
 @media screen and (max-width: 370px) {
   .message__user {
     max-width: 255px;

@@ -3,7 +3,7 @@ import db from '../firebase';
 import firebase from "firebase/compat/app";
 import sound from '../IMAGES/sound.mp3';
 import { useSelector } from 'react-redux'
-import userImg from '../IMAGES/user.png';
+// import userImg from '../IMAGES/user.png';
 import { ref, uploadBytesResumable, getDownloadURL, getStorage } from "firebase/storage";
 import PreLoader from './PreLoader';
 
@@ -34,7 +34,7 @@ const ChatComponent = ({ roomId }) => {
       // progress can be paused and resumed. It also exposes progress updates.
       // Receives the storage reference and the file to upload.
       if (file.name) {
-       
+
         const uploadTask = uploadBytesResumable(storageRef, file);
         setLoading(true);
         uploadTask.on(
@@ -54,23 +54,26 @@ const ChatComponent = ({ roomId }) => {
               setFileUrl(url);
               db.collection("rooms").doc(roomId).collection("messages").add({
                 userName: userData.userName,
+                userImage:userData.userPhoto,
                 message: message,
                 timeStamp: firebase.firestore.FieldValue.serverTimestamp(),
-                file: url
+                file: url,
+                fileType: file.type,
+                fileName:file.name
               })
             });
             setLoading(false);
           }
         );
-       
+
       }
       setFile("")
       setFileUrl("")
-console.log(loading);
       // sending data to dataBASE while file is not seclected
       if (!file.name) {
         db.collection("rooms").doc(roomId).collection("messages").add({
-          userName: userData.userName,
+          userName: userData.userName,          
+          userImage:userData.userPhoto,
           message: message,
           timeStamp: firebase.firestore.FieldValue.serverTimestamp(),
         })
@@ -92,12 +95,15 @@ console.log(loading);
   const handleChange = (event) => {
     setFile(event.target.files[0])
   }
-   
+
+  // console.log(file.size)
+  // console.log(fileUrl)
+  // console.log(file.type.startsWith('video/'))
   return (
     <>
-    {
-      loading ? <PreLoader/> : ""
-    }
+      {
+        loading ? <PreLoader /> : ""
+      }
       {/* CHATconversion */}
       <div className="col-12 Chat_conversion_area">
         <div className="row">
@@ -111,13 +117,23 @@ console.log(loading);
           </div> */}
           {
             displayMsg.map((msgData) => {
+              console.log(msgData)
               return <div className={`col-12 UserChatCol ${userData.userName === msgData.userName && "user__sender"} `} key={msgData.timeStamp}>
                 <div className="UserChat">
-                  <div className="name__user__Img"> <img src={userData.userName === msgData.userName ? userData.userPhoto : userImg} alt="user__Img" className='user__Img' /> {msgData.userName}</div>
+                  <div className="name__user__Img"> <img src={msgData.userImage} alt="user__Img" className='user__Img' /> {msgData.userName}</div>
                   <div className="message__user">{msgData.message}
+                    {/* {
+                      msgData.file ?  <img src={msgData.file} alt="IMG" className='sendImgUSER' /> : ""
+                    } */}
+
                     {
-                      msgData.file ?  <img src={msgData.file} alt="IMG" className='sendImgUSER' />:""
+                      msgData.file ? msgData.fileType.startsWith('image/') ? <img src={msgData.file} alt="IMG" className='sendImgUSER' /> : msgData.fileType.startsWith('video/') ? <video controls>
+                        <source src={msgData.file} />
+                      </video> : <div className='document d-flex'><ion-icon name="document"></ion-icon> <span>{msgData.fileName}</span>
+                      <a className='ms-auto' href={msgData.file}><ion-icon name="cloud-download"></ion-icon></a>
+                      </div> : ""
                     }
+
                     <div className="timeStamp">{new Date(msgData.timeStamp?.seconds * 1000).toLocaleString()}</div>
                   </div>
                 </div>
@@ -143,7 +159,11 @@ console.log(loading);
       <div className="col-12 top_left_header d-flex align-items-center" style={{ padding: "7.5px 16px", backgroundcolor: "#f0f2f5" }}>
         <div className="input_before_icons d-flex align-items-center">
           <input type="file" id='sendImg' onChange={handleChange} style={{ display: "none" }} />
-          <label htmlFor="sendImg" ><ion-icon name="image" id="send-img"></ion-icon>
+          <label htmlFor="sendImg" className='position-relative'><ion-icon name="image" id="send-img"></ion-icon>
+            {
+              file.name ? <span className="position-absolute top-0 translate-middle bg-success border border-light rounded-circle" style={{ left: "65%", padding: "6px" }}>
+              </span> : ""
+            }
           </label>
         </div>
         <input type="text" placeholder="Type a message" className="chat_box" value={message} onChange={e => setMessage(e.target.value)} />
