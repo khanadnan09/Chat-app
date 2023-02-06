@@ -21,7 +21,7 @@ const SideBarHead = () => {
         const storageRef = storage && img.name && ref(storage, `/RoomsImage/${img.name}`);
         // progress can be paused and resumed. It also exposes progress updates.
         // Receives the storage reference and the file to upload.
-        if (img.name) {
+        if (img.name && roomName) {
             const uploadTask = uploadBytesResumable(storageRef, img);
             uploadTask.on(
                 "state_changed",
@@ -34,7 +34,6 @@ const SideBarHead = () => {
                 () => {
                     // download url
                     getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-                        console.log(url);
                         db.collection("rooms").add({
                             name: roomName,
                             image: url

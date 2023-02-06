@@ -23,9 +23,11 @@
 ::-webkit-scrollbar-thumb {
   background: #d1d1d1b0;
 }
+
 :focus-visible {
   outline: -webkit-focus-ring-color auto 0px !important;
 }
+
 .top_gradient_behind {
   background-color: #00a884;
   height: 18vh;
@@ -114,7 +116,9 @@
   object-fit: cover;
   border-radius: 50%;
 }
-.single_contact #groupIcon  {
+
+.single_contact #groupIcon {
+  min-width: 25px;
   padding: 10px;
   font-size: 33px;
   background-color: #dfe5e7;
@@ -128,8 +132,10 @@
   display: flex;
   flex-direction: column;
   padding-left: 10px;
+  width: 100%;
 }
-.user_wraper #groupIcon{
+
+.user_wraper #groupIcon {
   padding: 10px;
   font-size: 33px;
   background-color: #dfe5e7;
@@ -138,6 +144,7 @@
   height: 25px;
   width: 25px;
 }
+
 .user_name {
   font-size: 14px;
   font-weight: 400;
@@ -183,7 +190,7 @@
 .user_sm_msg {
   font-size: 12px;
   color: #54656f;
-  width: 261px;
+  width: 240px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -434,22 +441,97 @@
 .modal-footer :nth-child(1) {
   box-shadow: rgb(0 0 0 / 15%) 0px 2px 8px;
 }
+
 .modal-footer :nth-child(2) {
   color: #fff;
   background-color: #464646;
   box-shadow: rgb(0 0 0 / 15%) 0px 2px 8px;
 }
-.EmptyChatComp{
+
+.EmptyChatComp {
   background-color: #e9edef;
   height: 100%;
   color: #242424;
 }
-.EmptyChatComp ion-icon{
+
+.EmptyChatComp ion-icon {
   font-size: 300px;
 }
-.text_start{
+
+.text_start {
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 400;
   width: 70%;
   text-align: center;
+}
+
+/* responsive css */
+@media screen and (max-width: 1060px) {
+  .user_sm_msg {
+    width: 150px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .user_wraper ion-icon {
+    display: none !important;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .EmptyChatComp {
+    display: none !important;
+  }
+
+  .main_window_cont {
+    position: absolute;
+  }
+
+  .Main_window {
+    position: relative;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .Main_window .col-lg-4 {
+    height: 100vh;
+  }
+
+  .SideBarGroups {
+    height: calc(100vh - 115px);
+  }
+
+  .Main_window .col-lg-8 {
+    position: absolute;
+    z-index: 2;
+  }
+
+  .Chat_conversion_area {
+    height: calc(100vh - 120px);
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .message__user {
+    margin-left: 10px !important;
+    margin-right: 10px !important;
+  }
+  .name__user__Img {
+    margin-left: 10px;
+  }
+  .user__sender .name__user__Img {
+  margin-right: 10px;
+  }
+}
+@media screen and (max-width: 370px) {
+  .message__user {
+    max-width: 255px;
+    margin-left: 10px !important;
+  }
+
+  .wraper {
+    width: 90vw;
+  }
 }

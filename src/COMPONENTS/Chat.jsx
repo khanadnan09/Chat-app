@@ -19,11 +19,13 @@ const Chat = () => {
       }
     })
   }, [roomId])
+
+
   return (
     <div className="col-lg-8 p-0">
       {
         roomId ? <>
-          <ChatHeader roomName={roomName} roomId={roomId} roomImage={roomImage} />
+          <ChatHeader roomName={roomName} roomId={roomId} roomImage={roomImage}/>
           <ChatComponent roomId={roomId} />
         </>
           : <EmptyChatComp />

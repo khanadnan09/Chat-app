@@ -7,7 +7,7 @@ const Home = () => {
         <div className="container-fluid">
             <div className="row">
                 <div className="col-12 top_gradient_behind"></div>
-                <div className="col-12 d-flex justify-content-center">
+                <div className="col-12 d-flex justify-content-center main_window_cont">
                     <div className="row Main_window">
                         <Sidebar />
                         <Chat />
