@@ -411,7 +411,7 @@
 }
 
 .spinner__col {
-  background-color: #e5e3e3f0;
+  background-color: #e5e3e3;
   height: calc(90vh - 61px);
   display: flex;
   justify-content: center;
@@ -529,6 +529,9 @@ video {
 
   .Chat_conversion_area {
     height: calc(100vh - 120px);
+  }
+  .spinner__col {
+    height: calc(100vh - 61px);
   }
 }
 

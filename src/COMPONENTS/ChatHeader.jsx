@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import db from '../firebase';
 
-const ChatHeader = ({ roomName, roomId, roomImage}) => {
- console.log(roomImage)
+const ChatHeader = ({ roomName, roomId, roomImage }) => {
   const [lastMsg, setLastMsg] = useState("")
   useEffect(() => {
     db.collection("rooms").doc(roomId).collection("messages").orderBy("timeStamp", "desc").onSnapshot((snap) => {
@@ -12,11 +11,11 @@ const ChatHeader = ({ roomName, roomId, roomImage}) => {
   return (
     <div className="col-12 top_left_header d-flex justify-content-between" style={{ padding: " 7.5px 16px" }}>
       <div className="user_wraper d-flex align-items-center">
-      
+
         {
-          roomImage !== undefined ? <img src={roomImage} alt="" className="uesr_top_left_header" style={{ cursor: "pointer" }} /> 
-          :
-          <ion-icon name="person" id="groupIcon"></ion-icon>
+          roomImage !== undefined ? <img src={roomImage} alt="" className="uesr_top_left_header" style={{ cursor: "pointer" }} />
+            :
+            <ion-icon name="person" id="groupIcon"></ion-icon>
         }
 
         <div className="text_info_wrapper ps-2">

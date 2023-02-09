@@ -117,7 +117,6 @@ const ChatComponent = ({ roomId }) => {
           </div> */}
           {
             displayMsg.map((msgData) => {
-              console.log(msgData)
               return <div className={`col-12 UserChatCol ${userData.userName === msgData.userName && "user__sender"} `} key={msgData.timeStamp}>
                 <div className="UserChat">
                   <div className="name__user__Img"> <img src={msgData.userImage} alt="user__Img" className='user__Img' /> {msgData.userName}</div>
@@ -130,7 +129,7 @@ const ChatComponent = ({ roomId }) => {
                       msgData.file ? msgData.fileType.startsWith('image/') ? <img src={msgData.file} alt="IMG" className='sendImgUSER' /> : msgData.fileType.startsWith('video/') ? <video controls>
                         <source src={msgData.file} />
                       </video> : <div className='document d-flex'><ion-icon name="document"></ion-icon> <span>{msgData.fileName}</span>
-                      <a className='ms-auto' href={msgData.file}><ion-icon name="cloud-download"></ion-icon></a>
+                      <a className='ms-auto' href={msgData.file} target=" " ><ion-icon name="cloud-download"></ion-icon></a>
                       </div> : ""
                     }
 

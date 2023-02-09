@@ -6,8 +6,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setUserLogOut } from '../ReduxStore/UserSlice'
 import userImg from '../IMAGES/user.png';
 
-
 const SideBarHead = () => {
+
     const dispatch = useDispatch()
     const userData = useSelector((state) => state.user)
     const [roomName, setRoomName] = useState("")
@@ -16,7 +16,6 @@ const SideBarHead = () => {
     const storage = getStorage();
 
     const createRoom = () => {
-
         // handling images
         const storageRef = storage && img.name && ref(storage, `/RoomsImage/${img.name}`);
         // progress can be paused and resumed. It also exposes progress updates.
@@ -42,13 +41,13 @@ const SideBarHead = () => {
                 }
             );
         }
-        if (!img.name && roomName !=="") {
+        if (!img.name && roomName !== "") {
             db.collection("rooms").add({
                 name: roomName,
             })
         }
-        if ( roomName ==="") {
-           alert("you can not create room without name.")
+        if (roomName === "") {
+            alert("you can not create room without name.")
         }
         setRoomName("")
         setImg("")
@@ -57,7 +56,7 @@ const SideBarHead = () => {
     const handleChange = (event) => {
         setImg(event.target.files[0])
     }
-  
+
     const signOut = () => {
         auth.signOut().then(() => {
             dispatch(setUserLogOut({
@@ -67,7 +66,6 @@ const SideBarHead = () => {
             }))
         })
     }
-
 
     return (
         <>
